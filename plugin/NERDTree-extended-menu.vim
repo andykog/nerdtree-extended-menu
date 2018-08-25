@@ -14,10 +14,6 @@ call NERDTreeAddMenuItem({
     \ 'shortcut': 'g',
     \ 'callback': 'NERDTreeReplace' })
 
-function! s:getPatternLength(str, pattern, flags)
-  return len(a:str) - len(substitute(a:str, a:pattern, '', a:flags))
-endfunction
-
 function! NERDTreeReplace() 
     " get the current dir from NERDTree
     let cd = g:NERDTreeDirNode.GetSelected().path.str()
@@ -25,7 +21,6 @@ function! NERDTreeReplace()
     let pattern = input("Enter the pattern: ")
     let flags = ''     " TODO
     if pattern == ''
-        echo 'Maybe another time...'
         return
     endif
     let replacement = input("Enter the replacement: ")
@@ -50,17 +45,19 @@ function! NERDTreeReplace()
       let i += 1
 
       let lnum = line.lnum
-      let fullText = getline(lnum)
       let startCol = line.col
-      let endCol = line.col + s:getPatternLength(fullText, pattern, flags)
+      let fullText = getline(lnum)
       let preText = strpart(fullText, 0, startCol - 1)
       let text = strpart(fullText, startCol - 1)
       let newText = substitute(text, pattern, replacement, flags) 
       let newFullText = preText . newText
+      let endCol = matchend(fullText, pattern, line.col - 1)
       let delta = len(newText) - len(text)
 
       if yesAll == 0
-        execute 'match Pattern /\%<'.endCol.'v.\%>'.startCol.'v.\%'.lnum.'l/'
+        let ms = startCol - 1
+        let me = endCol + 1
+        execute 'match Pattern /\%<'.me.'v\%>'.ms.'v\%'.lnum.'l/'
         redraw
         echo "Replace with ". replacement ."? (y/n/a/q)"
         let ans = '-'
@@ -112,7 +109,6 @@ function! NERDTreeAck()
     let pattern = input("Enter the pattern: ")
     let flags = '' " TODO
     if pattern == ''
-        echo 'Maybe another time...'
         return
     endif
     call ack#Ack('grep!', "-i ".shellescape(pattern)." ".shellescape(cd))
