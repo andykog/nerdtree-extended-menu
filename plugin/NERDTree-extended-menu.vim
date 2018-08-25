@@ -30,7 +30,8 @@ function! NERDTreeReplace()
     endif
     let replacement = input("Enter the replacement: ")
     :hi Pattern cterm=bold gui=inverse
-    exec "Ack! -i '".pattern."' '".cd."'"
+    call ack#Ack('grep!', "-i ".shellescape(pattern)." ".shellescape(cd))
+
 
     if empty(getqflist())
       return
@@ -114,6 +115,6 @@ function! NERDTreeAck()
         echo 'Maybe another time...'
         return
     endif
-    exec "Ack! -i '".pattern."' '".cd."'"
+    call ack#Ack('grep!', "-i ".shellescape(pattern)." ".shellescape(cd))
 endfunction
 
