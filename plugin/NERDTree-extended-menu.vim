@@ -42,6 +42,12 @@ call NERDTreeAddMenuItem({
     \ 'callback': 'NEMReplaceCaseSensetive'
     \ })
 
+call NERDTreeAddMenuItem({
+    \ 'text': '(t)erminal',
+    \ 'shortcut': 't',
+    \ 'callback': 'NEMTerminal'
+    \ })
+
 function! NEMSearchCaseSensetive()
   call nem#Search(0)
 endfunction
@@ -58,4 +64,6 @@ function! NEMReplaceCaseInsensetive()
   call nem#Replace(1)
 endfunction
 
-
+function! NEMTerminal()
+  call nem#Terminal()
+endfunction

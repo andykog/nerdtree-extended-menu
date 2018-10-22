@@ -88,3 +88,8 @@ function! nem#Search(caseInsensetive)
     return pattern
 endfunction
 
+function! nem#Terminal()
+    let cd = g:NERDTreeDirNode.GetSelected().path.str()
+    silent execute "!open -a Terminal " . cd
+endfunction
+
