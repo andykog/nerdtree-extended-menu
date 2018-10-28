@@ -1,4 +1,4 @@
-function! nem#Replace(caseInsensetive)
+function! nem#doReplace(caseInsensetive)
     let cd = g:NERDTreeDirNode.GetSelected().path.str()
     let pattern = nem#Search(a:caseInsensetive)
 
@@ -74,6 +74,22 @@ function! nem#Replace(caseInsensetive)
       catch /^Vim\%((\a\+)\)\=:E553/ " no more lines
       endtry
     endfor
+endfunction
+
+
+function! nem#Replace(caseInsensetive)
+
+    " ALE echoes errors. Interferes with promt
+    let shouldToggleALE = exists('g:ale_enabled') && g:ale_enabled
+    if shouldToggleALE
+      ALEDisable
+    endif
+
+    call nem#doReplace(a:caseInsensetive)
+
+    if shouldToggleALE
+      ALEEnable
+    endif
 endfunction
 
 
